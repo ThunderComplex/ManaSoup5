@@ -30,16 +30,14 @@ public class ShootBall : MonoBehaviour
     {
         // Ray from camera to mouse position
         Ray ray = Camera.main.ScreenPointToRay(_inputActions.Player.MousePos.ReadValue<Vector2>());
-        Plane plane = new Plane(Vector3.up, transform.position); // XZ plane at player's Y
-        float enter;
         Vector3 targetPoint = transform.position + transform.forward;
-        if (plane.Raycast(ray, out enter))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
         {
-            targetPoint = ray.GetPoint(enter);
+            targetPoint = hitInfo.point;
         }
         Vector3 direction = (targetPoint - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-        Instantiate(ballPrefab, transform.position, rotation);
+        Instantiate(ballPrefab, transform.position + Vector3.forward * 2f, rotation);
     }
 
     // Update is called once per frame
