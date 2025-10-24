@@ -4,11 +4,29 @@ public class PlayerController : MonoBehaviour
 {
 	public float moveSpeed = 5f;
 
+	private InputSystem_Actions _inputActions;
+	private CharacterController _characterController;
+
+	void Awake()
+	{
+		TryGetComponent(out _characterController);
+		_inputActions = InputManager.Controls;
+	}
+
+	void OnEnable()
+	{
+		_inputActions.Enable();
+	}
+
+	void OnDisable()
+	{
+		_inputActions.Disable();
+	}
+
 	void Update()
 	{
-		float moveX = Input.GetAxis("Horizontal");
-		float moveZ = Input.GetAxis("Vertical");
-		Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed * Time.deltaTime;
-		transform.Translate(move, Space.World);
+		var move = _inputActions.Player.Move.ReadValue<Vector2>();
+		Vector3 movement = new Vector3(move.x, 0, move.y) * moveSpeed * Time.deltaTime;
+		_characterController.Move(movement);
 	}
 }

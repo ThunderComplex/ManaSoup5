@@ -3,16 +3,33 @@ using UnityEngine;
 public class ShootBall : MonoBehaviour
 {
     public GameObject ballPrefab;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private InputSystem_Actions _inputActions;
+
+    void Awake()
     {
- 
+        _inputActions = InputManager.Controls;
     }
-    
+
+    void OnEnable()
+    {
+        _inputActions.Enable();
+
+        _inputActions.Player.Attack.performed += ctx => Shoot();
+    }
+
+    void OnDisable()
+    {
+        _inputActions.Disable();
+
+        _inputActions.Player.Attack.performed -= ctx => Shoot();
+
+    }
+
     public void Shoot()
     {
         // Ray from camera to mouse position
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(_inputActions.Player.MousePos.ReadValue<Vector2>());
         Plane plane = new Plane(Vector3.up, transform.position); // XZ plane at player's Y
         float enter;
         Vector3 targetPoint = transform.position + transform.forward;
@@ -28,10 +45,5 @@ public class ShootBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Shoot();
-        }
     }
 }
