@@ -6,6 +6,8 @@ public class SpawnPlane : MonoBehaviour
 	[Tooltip("Number of points per line in X direction")]
 	public int pointCountInLine = 5;
 
+	[Header("Enemy Settings")]
+	public GameObject EnemyPrefab;
 
 	[SerializeField, HideInInspector]
 	public Vector3[] pointPositions;
@@ -13,7 +15,8 @@ public class SpawnPlane : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if (pointCountInLine < 2) {
+		if (pointCountInLine < 2)
+		{
 			pointPositions = null;
 			return;
 		}
@@ -46,6 +49,22 @@ public class SpawnPlane : MonoBehaviour
 				Vector3 point = origin + new Vector3(x * spacing, 0, z * spacing);
 				pointPositions[idx++] = point;
 				Gizmos.DrawSphere(point, 0.1f);
+			}
+		}
+	}
+
+	public void SpawnEnemies()
+	{
+		var playerLocation = GameObject.FindWithTag("Player").transform;
+
+		for (int i = 0; i < pointPositions.Length; i++)
+		{
+			if (i < 15)
+			{
+				var point = pointPositions[i];
+				point.y += 1f;
+				var obj = PoolingSystem.Instance.SpawnObject(EnemyPrefab, point, Quaternion.identity);
+				obj.GetComponent<EnemyController>().PlayerLocation = playerLocation;
 			}
 		}
 	}
