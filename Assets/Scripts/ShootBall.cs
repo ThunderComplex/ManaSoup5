@@ -37,7 +37,7 @@ public class ShootBall : MonoBehaviour
         }
         Vector3 direction = (targetPoint - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-        Instantiate(ballPrefab, transform.position + Vector3.forward, rotation);
+        PoolingSystem.Instance.SpawnObject(ballPrefab, transform.position + Vector3.forward, rotation);
     }
 
     // Update is called once per frame

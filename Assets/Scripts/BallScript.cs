@@ -12,7 +12,7 @@ public class BallScript : MonoBehaviour
     private Vector3 moveDirection;
     private Rigidbody rb;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null)
@@ -26,7 +26,10 @@ public class BallScript : MonoBehaviour
         int ballLayer = LayerMask.NameToLayer("Ball");
         gameObject.layer = ballLayer;
         Physics.IgnoreLayerCollision(ballLayer, ballLayer);
+    }
 
+    void OnEnable()
+    {
         // Move in local z direction (forward)
         moveDirection = transform.forward;
         moveDirection.y = 0;
@@ -39,7 +42,7 @@ public class BallScript : MonoBehaviour
         lifeTimer += Time.deltaTime;
         if (lifeTimer >= maxLifeTime)
         {
-            Destroy(gameObject);
+            PoolingSystem.Instance.ReturnObject(gameObject);
         }
     }
 
@@ -51,7 +54,7 @@ public class BallScript : MonoBehaviour
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             return;
         }
-    
+
         // Deal damage to the enemy if it has a Health component
         EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
@@ -69,7 +72,7 @@ public class BallScript : MonoBehaviour
         bounceCount++;
         if (bounceCount >= maxBounces)
         {
-            Destroy(gameObject);
+            PoolingSystem.Instance.ReturnObject(gameObject);
         }
     }
 }

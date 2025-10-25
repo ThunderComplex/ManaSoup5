@@ -49,11 +49,12 @@ public class PoolingSystem : MonoBehaviour
 
     public void ReturnObject(GameObject obj)
     {
-        var poolObj = PoolObjects.Find(po => po.Name == obj.name);
+        var objName = obj.name.Replace("(Clone)", "").Trim();
+        var poolObj = PoolObjects.Find(po => po.Name == objName);
 
         if (poolObj == null)
         {
-            Debug.Log("Pool Object not found: " + obj.name);
+            Debug.Log("Pool Object not found: " + objName);
             Destroy(obj);
             return;
         }
@@ -62,7 +63,7 @@ public class PoolingSystem : MonoBehaviour
 
         if (poolObj.InactiveObjects.Contains(obj))
         {
-            Debug.Log("Object already in pool: " + obj.name);
+            Debug.Log("Object already in pool: " + objName);
             return;
         }
 

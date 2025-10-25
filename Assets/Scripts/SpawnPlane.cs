@@ -59,7 +59,7 @@ public class SpawnPlane : MonoBehaviour
 
 		for (int i = 0; i < pointPositions.Length; i++)
 		{
-			if (i < 15)
+			if (i % 2 > 0)
 			{
 				var point = pointPositions[i];
 				point.y += 1f;
