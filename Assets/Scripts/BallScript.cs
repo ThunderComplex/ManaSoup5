@@ -1,3 +1,5 @@
+using System.Linq;
+using Ami.BroAudio;
 using UnityEngine;
 
 public class BallScript : MonoBehaviour
@@ -13,6 +15,8 @@ public class BallScript : MonoBehaviour
     private Vector3 moveDirection;
     private Rigidbody rb;
 
+    private SoundSource _bounceSound;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -27,6 +31,8 @@ public class BallScript : MonoBehaviour
         int ballLayer = LayerMask.NameToLayer("Ball");
         gameObject.layer = ballLayer;
         Physics.IgnoreLayerCollision(ballLayer, ballLayer);
+
+        _bounceSound = FindObjectsByType<SoundSource>(FindObjectsSortMode.None).Where(s => s.name == "Bounce").FirstOrDefault();
     }
 
     void OnEnable()
@@ -74,6 +80,8 @@ public class BallScript : MonoBehaviour
         moveDirection.y = 0;
         moveDirection.Normalize();
         rb.linearVelocity = moveDirection * speed;
+
+        _bounceSound?.Play();
 
         bounceCount++;
         if (bounceCount >= maxBounces)
