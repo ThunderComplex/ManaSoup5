@@ -6,6 +6,7 @@ public class BallScript : MonoBehaviour
     public float speed = 5f;
     public int maxBounces = 3;
     public float maxLifeTime = 5f;
+    public float explosionRadius = 0f;
 
     private int bounceCount = 0;
     private float lifeTimer = 0f;
@@ -39,6 +40,7 @@ public class BallScript : MonoBehaviour
         lifeTimer += Time.deltaTime;
         if (lifeTimer >= maxLifeTime)
         {
+            TriggerExplosion();
             Destroy(gameObject);
         }
     }
@@ -54,10 +56,11 @@ public class BallScript : MonoBehaviour
     
         // Deal damage to the enemy if it has a Health component
         EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        if (enemyHealth != null && explosionRadius == 0)
         {
             enemyHealth.TakeDamage(damageValue);
         }
+        TriggerExplosion();
 
         // Reflect the move direction based on the collision normal
         Vector3 normal = collision.contacts[0].normal;
@@ -69,7 +72,38 @@ public class BallScript : MonoBehaviour
         bounceCount++;
         if (bounceCount >= maxBounces)
         {
+            
             Destroy(gameObject);
+        }
+    }
+
+    private void TriggerExplosion()
+    {
+        if (explosionRadius <= 0) return;
+
+        // Find all colliders within the explosion radius
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+        foreach (Collider collider in colliders)
+        {
+            // Check if the object has the "Enemy" tag or EnemyHealth component
+            if (collider.CompareTag("Enemy") || collider.GetComponent<EnemyHealth>() != null)
+            {
+                EnemyHealth enemyHealth = collider.GetComponent<EnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(damageValue);
+                }
+            }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (explosionRadius > 0)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
         }
     }
 }
