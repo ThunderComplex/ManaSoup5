@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallScript
   damageValue: 10
-  speed: 20
+  speed: 10
   maxBounces: 6
   maxLifeTime: 10
+  explosionRadius: 0
