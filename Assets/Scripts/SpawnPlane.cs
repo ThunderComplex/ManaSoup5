@@ -18,6 +18,8 @@ public class SpawnPlane : MonoBehaviour
 	void Start()
 	{
 		Camera = Camera.main;
+		//call after 1 second to allow other systems to initialize
+		Invoke(nameof(SpawnEnemies), 1f);
 	}
 
 	private void OnDrawGizmos()

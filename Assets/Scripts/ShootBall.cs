@@ -1,8 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ShootBall : MonoBehaviour
 {
     public GameObject ballPrefab;
+
+    public List<GameObject> projectilePool = new List<GameObject>();
+    private int currentProjectilePoolIndex = 0;
 
     private InputSystem_Actions _inputActions;
 
@@ -28,6 +32,13 @@ public class ShootBall : MonoBehaviour
 
     public void Shoot()
     {
+        ballPrefab = projectilePool[currentProjectilePoolIndex];
+        currentProjectilePoolIndex++;
+        if (currentProjectilePoolIndex >= projectilePool.Count)
+        {
+            currentProjectilePoolIndex = 0;
+        }
+
         // Ray from camera to mouse position
         Ray ray = Camera.main.ScreenPointToRay(_inputActions.Player.MousePos.ReadValue<Vector2>());
         Vector3 targetPoint = transform.position + transform.forward;

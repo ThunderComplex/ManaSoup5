@@ -33,6 +33,7 @@ public class DifficultyManager : MonoBehaviour
         {
             DifficultyLevel++;
             KillsToIncreaseDifficulty += 10;
+            GameObject.Find("GameController").GetComponent<PlayerProgression>().ShowUpgradeOptions();
         }
     }
 }
