@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class PushPlayer : MonoBehaviour
@@ -9,11 +10,11 @@ public class PushPlayer : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Rigidbody rb = other.GetComponent<Rigidbody>();
-            if (rb != null)
+            PlayerController playerController = other.GetComponent<PlayerController>();
+            if (playerController != null)
             {
                 // Push in world z direction
-                rb.AddForce(Vector3.forward * pushForce, ForceMode.Impulse);
+                playerController.PushPlayer(Vector3.forward * pushForce);
             }
         }
     }

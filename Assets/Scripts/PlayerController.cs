@@ -29,4 +29,9 @@ public class PlayerController : MonoBehaviour
 		Vector3 movement = new Vector3(move.x, 0, move.y) * moveSpeed * Time.deltaTime;
 		_characterController.Move(movement);
 	}
+
+	public void PushPlayer(Vector3 force)
+	{
+		_characterController.Move(force * Time.deltaTime);
+	}
 }

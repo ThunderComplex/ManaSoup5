@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5036916989833279040}
   - component: {fileID: 1472579607548554903}
   - component: {fileID: 3149811177337750995}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,4 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1945cf10cb22d469ac158938a2394f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallScript
-  speed: 10
+  damageValue: 10
+  speed: 20
+  maxBounces: 6
+  maxLifeTime: 10

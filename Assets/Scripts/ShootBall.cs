@@ -13,17 +13,17 @@ public class ShootBall : MonoBehaviour
 
     void OnEnable()
     {
-        _inputActions.Enable();
-
-        _inputActions.Player.Attack.performed += ctx => Shoot();
+        _inputActions.Player.Attack.performed += OnAttackPerformed;
     }
 
     void OnDisable()
     {
-        _inputActions.Disable();
+        _inputActions.Player.Attack.performed -= OnAttackPerformed;
+    }
 
-        _inputActions.Player.Attack.performed -= ctx => Shoot();
-
+    private void OnAttackPerformed(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        Shoot();
     }
 
     public void Shoot()
@@ -37,7 +37,7 @@ public class ShootBall : MonoBehaviour
         }
         Vector3 direction = (targetPoint - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-        Instantiate(ballPrefab, transform.position + Vector3.forward * 2f, rotation);
+        Instantiate(ballPrefab, transform.position + Vector3.forward, rotation);
     }
 
     // Update is called once per frame
