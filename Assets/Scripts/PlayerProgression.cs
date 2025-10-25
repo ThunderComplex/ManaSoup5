@@ -26,6 +26,17 @@ public class PlayerProgression : MonoBehaviour
         upgradeTextList.Add("+5 dmg to MagicOrb");
         upgradeTextList.Add("+5 dmg to YellowOrb");
         upgradeTextList.Add("+5 dmg to FireBall");
+
+        List<GameObject> prefabProjectilePool = new List<GameObject>();
+        prefabProjectilePool = GetComponent<PrefabOjectPool>().PrefabProjectilePool;
+        for (int i = 0; i < prefabProjectilePool.Count; i++)
+        {
+            GameObject prefab = prefabProjectilePool[i];
+            GameObject projectile = PoolingSystem.Instance.SpawnObject(prefab, Vector3.zero, Quaternion.identity);
+            projectile.SetActive(false);
+            projectilePool.Add(projectile);
+            if (i < 3) playerProjectilePool.Add(projectile);
+        }   
     }
 
     public void ShowUpgradeOptions()
@@ -49,7 +60,7 @@ public class PlayerProgression : MonoBehaviour
             string upgradeText = randomUpgrades[i];
             buttonTransform.GetComponent<Button>().onClick.AddListener(() => ApplyUpgrade(upgradeText));
         }
-        Time.timeScale = 0.01f;
+        Time.timeScale = 0;
     }
 
     public void ApplyUpgrade(string upgradeText)
@@ -57,17 +68,16 @@ public class PlayerProgression : MonoBehaviour
         if (upgradeText.StartsWith("+1x"))
         {
             // Handle adding a new projectile
-            playerProjectilePool.Add(projectilePool.Find(p => p.name == upgradeText.Substring(4).Trim()));
+            playerProjectilePool.Add(projectilePool.Find(p => p.name == upgradeText.Substring(4).Trim()+"(Clone)"));
         }
         else if (upgradeText.Contains("dmg"))
         {
             // Handle upgrading an existing projectile
             string orbType = upgradeText.Substring(10).Trim();
             Debug.Log("Upgrading " + orbType);
-            GameObject existingProjectile = playerProjectilePool.Find(p => p.name == orbType);
-            //if (existingProjectile != null) 
-            existingProjectile.GetComponent<BallScript>().damageValue += 5;
-            projectilePool.Find(p => p.name == orbType).GetComponent<BallScript>().damageValue += 5;
+            GameObject existingProjectile = playerProjectilePool.Find(p => p.name == orbType + "(Clone)");
+            if (existingProjectile != null) existingProjectile.GetComponent<BallScript>().damageValue += 5;
+            projectilePool.Find(p => p.name == orbType + "(Clone)").GetComponent<BallScript>().damageValue += 5;
         }
         upgradePannel.SetActive(false);
         Time.timeScale = 1f;

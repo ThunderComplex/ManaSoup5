@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class ShootBall : MonoBehaviour
 {
-    public GameObject ballPrefab;
 
     public List<GameObject> projectilePool = new List<GameObject>();
     private int currentProjectilePoolIndex = 0;
@@ -32,13 +31,7 @@ public class ShootBall : MonoBehaviour
 
     public void Shoot()
     {
-        ballPrefab = projectilePool[currentProjectilePoolIndex];
-        currentProjectilePoolIndex++;
-        if (currentProjectilePoolIndex >= projectilePool.Count)
-        {
-            currentProjectilePoolIndex = 0;
-        }
-
+        Debug.Log("Shoot called");
         // Ray from camera to mouse position
         Ray ray = Camera.main.ScreenPointToRay(_inputActions.Player.MousePos.ReadValue<Vector2>());
         Vector3 targetPoint = transform.position + transform.forward;
@@ -48,7 +41,14 @@ public class ShootBall : MonoBehaviour
         }
         Vector3 direction = (targetPoint - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-        PoolingSystem.Instance.SpawnObject(ballPrefab, transform.position + Vector3.forward, rotation);
+        // Instantiate(projectilePool[currentProjectilePoolIndex], transform.position + Vector3.forward, rotation);
+        GameObject projectile = PoolingSystem.Instance.SpawnObject(projectilePool[currentProjectilePoolIndex], transform.position + Vector3.forward, rotation);
+        projectile.SetActive(true);
+        currentProjectilePoolIndex++;
+        if (currentProjectilePoolIndex >= projectilePool.Count)
+        {
+            currentProjectilePoolIndex = 0;
+        }
     }
 
     // Update is called once per frame
