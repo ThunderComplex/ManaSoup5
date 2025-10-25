@@ -46,7 +46,5 @@ public class BasicEnemyMovement : MonoBehaviour, IEnemyMovement
         _waypoint = transform.position + (rotation * directionToTarget * (distance / NumWaypoints));
 
         if (NumWaypoints > 1) NumWaypoints--;
-
-        Debug.DrawLine(transform.position, _waypoint, Color.red, 5f);
     }
 }

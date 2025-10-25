@@ -31,6 +31,9 @@ public class BallScript : MonoBehaviour
 
     void OnEnable()
     {
+        bounceCount = 0;
+        lifeTimer = 0f;
+
         // Move in local z direction (forward)
         moveDirection = transform.forward;
         moveDirection.y = 0;
