@@ -25,10 +25,10 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        
+
         // Show damage text
         ShowDamageText(damage);
-        
+
         if (currentHealth <= 0)
         {
             // Find GameController and add points to pointCounter
@@ -38,7 +38,8 @@ public class EnemyHealth : MonoBehaviour
                 pointCounter.AddPoints(Mathf.RoundToInt(maxHealth / 2)); // Add points
             }
 
-            Destroy(gameObject);
+            DifficultyManager.Instance.RegisterKill();
+            PoolingSystem.Instance.ReturnObject(gameObject);
         }
         else
         {
@@ -50,14 +51,14 @@ public class EnemyHealth : MonoBehaviour
             }
         }
     }
-    
+
     private void ShowDamageText(float damage)
     {
         if (damageTextPrefab != null && canvas != null)
         {
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);  
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
             GameObject damageTextObj = Instantiate(damageTextPrefab, canvas.transform);
-            
+
             // Convert screen position to canvas position
             Vector2 canvasPos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -66,7 +67,7 @@ public class EnemyHealth : MonoBehaviour
                 canvas.worldCamera,
                 out canvasPos
             );
-            
+
             // Add offset based on number of active damage texts to prevent overlap
             float offsetX = (activeDamageTexts % 3) * 30f - 30f; // Spread horizontally
             float offsetY = (activeDamageTexts / 3) * 40f; // Stack vertically after 3 texts
@@ -80,12 +81,17 @@ public class EnemyHealth : MonoBehaviour
             activeDamageTextObjects.Add(damageTextObj);
         }
     }
-    
+
+    void OnEnable()
+    {
+        maxHealth += DifficultyManager.Instance.EnemyHealth;
+        currentHealth = maxHealth;
+    }
 
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

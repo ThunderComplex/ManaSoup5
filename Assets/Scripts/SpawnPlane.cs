@@ -5,13 +5,20 @@ public class SpawnPlane : MonoBehaviour
 	[Header("Grid Settings")]
 	[Tooltip("Number of points per line in X direction")]
 	public int pointCountInLine = 5;
+	public float Length = 10f;
 
 	[Header("Enemy Settings")]
 	public GameObject EnemyPrefab;
 
 	[SerializeField, HideInInspector]
-	public Vector3[] pointPositions;
-	public Vector3[] GetPointPositions() => pointPositions;
+	public Vector3[,] pointPositions;
+
+	private Camera Camera;
+
+	void Start()
+	{
+		Camera = Camera.main;
+	}
 
 	private void OnDrawGizmos()
 	{
@@ -21,7 +28,21 @@ public class SpawnPlane : MonoBehaviour
 			return;
 		}
 
+		RecalculatePoints();
+
 		Gizmos.color = Color.red;
+
+		for (int x = 0; x < pointPositions.GetLength(0); x++)
+		{
+			for (int z = 0; z < pointPositions.GetLength(1); z++)
+			{
+				Gizmos.DrawSphere(pointPositions[x, z], 0.1f);
+			}
+		}
+	}
+
+	private void RecalculatePoints()
+	{
 		float sizeX = 1f;
 		float sizeZ = 1f;
 		MeshFilter mf = GetComponent<MeshFilter>();
@@ -40,16 +61,25 @@ public class SpawnPlane : MonoBehaviour
 		float usedZ = spacing * (countZ - 1);
 		Vector3 origin = transform.position - new Vector3(sizeX, 0, usedZ) * 0.5f;
 
-		pointPositions = new Vector3[countX * countZ];
-		int idx = 0;
+		pointPositions = new Vector3[countX, countZ];
 		for (int x = 0; x < countX; x++)
 		{
 			for (int z = 0; z < countZ; z++)
 			{
 				Vector3 point = origin + new Vector3(x * spacing, 0, z * spacing);
-				pointPositions[idx++] = point;
-				Gizmos.DrawSphere(point, 0.1f);
+				pointPositions[x, z] = point;
 			}
+		}
+	}
+
+	void Update()
+	{
+		var cameraDistance = Mathf.Abs(Camera.transform.position.z - transform.position.z);
+		if (cameraDistance <= 0.1f)
+		{
+			transform.position += new Vector3(0, 0, Length);
+			RecalculatePoints();
+			SpawnEnemies();
 		}
 	}
 
@@ -57,11 +87,16 @@ public class SpawnPlane : MonoBehaviour
 	{
 		var playerLocation = GameObject.FindWithTag("Player").transform;
 
-		for (int i = 0; i < pointPositions.Length; i++)
+		for (int x = 0; x < pointPositions.GetLength(0); x += 2)
 		{
-			if (i % 2 > 0)
+			for (int z = 2; z < pointPositions.GetLength(1); z++)
 			{
-				var point = pointPositions[i];
+				if (x % 2 != 0 || z < 2)
+				{
+					continue;
+				}
+
+				var point = pointPositions[x, z];
 				point.y += 1f;
 				var obj = PoolingSystem.Instance.SpawnObject(EnemyPrefab, point, Quaternion.identity);
 				obj.GetComponent<EnemyController>().PlayerLocation = playerLocation;

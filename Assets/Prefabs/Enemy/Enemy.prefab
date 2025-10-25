@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4082741900484844614}
   - component: {fileID: 4374050825997341457}
   - component: {fileID: 5711880184608779201}
+  - component: {fileID: 3891614205349847603}
+  - component: {fileID: 2090022187760022554}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -170,10 +172,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b910e61ec886f8c46b80c87da03128a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyMovement
-  Speed: 0.6
+  Speed: 0
   WaypointThreshold: 0.55
   NumWaypoints: 3
   MovementStride: 50
+--- !u!114 &3891614205349847603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044559967982140472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0414c1f424e834482974e7af366e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHealth: 10
+  currentHealth: 0
+  damageTextPrefab: {fileID: 2532552370371185278, guid: 9803fdb61cb1f564e950c00300b8d47a, type: 3}
+--- !u!114 &2090022187760022554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044559967982140472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493e8a859ea29d54b92787fbb77df2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Shake
+  shakeIntensity: 1
+  shakeDuration: 0.3
 --- !u!1 &8765107694999938300
 GameObject:
   m_ObjectHideFlags: 0
